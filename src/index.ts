@@ -1,8 +1,22 @@
-import express, { Request, Response } from 'express';
-const app = express();
+import express, { Application, Request, Response } from 'express'
+import dotenv from 'dotenv'
+import { graphqlHTTP } from 'express-graphql'
+import schema from './Schemas'
+dotenv.config()
 
-app.get('/', (_, res: Response): void => {
-	res.json({ message: 'Typescript' });
-});
+const server: Application = express()
+const port: string = process.env.PORT || '4001'
 
-app.listen(3000, (): void => console.log('Server Running ...'));
+server.get('/', (_, res: Response): void => {
+  res.json({ message: 'hi there! 👋' })
+})
+
+server.use(
+  '/',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+)
+
+server.listen(port, (): void => console.log('Server Running ...'))
